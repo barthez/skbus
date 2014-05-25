@@ -26,7 +26,24 @@ ul.timetable {
       background: #f2f2f2;
     }
 
-    &.past {display: none;}
+    &.past {
+      display: none;
+    }
+
+    &:not(.past) {
+      &:first-of-type {
+        font-size: 2em;
+        font-weight: bold;
+      }
+
+      &:nth-of-type(2) {
+        font-size: 1.7em;
+      }
+
+      &:nth-of-type(3) {
+        font-size: 1.2em;
+      }
+    }
 
   }
 }
