@@ -29,6 +29,10 @@ class Hour
   def <=>(other)
     to_minutes <=> other.to_minutes
   end
+
+  def self.now
+    parse Time.now.strftime('%H:%M')
+  end
 end
 
 class Timetable
@@ -51,10 +55,20 @@ class Timetable
     @timetable[type].insert(idx, hour)
   end
 
-  def get(type = types.first)
-    @timetable[type]
+
+
+  def self.today_type
+    case Time.now.wday
+    when 0 then :sun
+    when 6 then :sat
+    else :week
+    end
   end
 
+  def get(type = nil)
+    type ||= self.class.today_type
+    @timetable[type]
+  end
 end
 
 class SkBusParser < Timetable
@@ -89,7 +103,7 @@ class SkBusParser < Timetable
   end
 
   def self.parse_all
-    open("#{url}/rozklady.html").read.scan(/href="(.*pdf)"/).map(&:first).first(4).map do |path|
+    @@timetables ||= open("#{url}/rozklady.html").read.scan(/href="(.*pdf)"/).map(&:first).first(4).map do |path|
       self.parse(path)
     end
   end

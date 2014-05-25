@@ -42,3 +42,5 @@ gem 'spring',        group: :development
 gem 'pdf-reader'
 
 gem 'rails_12factor', group: :production
+
+gem 'foundation-rails'
