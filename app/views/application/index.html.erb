@@ -1,6 +1,6 @@
 <% hnow = Hour.now %>
 
-<h2>Aktualna godzina: <%= hnow %></h2>
+<h2 class="current-time"><span><%= hnow %></span></h2>
 
 <dl data-tab class="tabs">
   <% @timetables[2..3].each_with_index do |tt, idx| %>

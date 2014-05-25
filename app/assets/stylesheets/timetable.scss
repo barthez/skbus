@@ -1,5 +1,18 @@
 @import 'overrides';
 
+.current-time {
+  font-family: 'Fredoka One';
+  text-align: center;
+  font-size: 4em;
+
+  em { font-style: normal; }
+
+  .colon em {
+
+    color: transparent;
+  }
+}
+
 ul.timetable {
   list-style: none;
   margin: 0;
