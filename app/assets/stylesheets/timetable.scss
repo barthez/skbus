@@ -13,6 +13,40 @@
   }
 }
 
+.tabs {
+  dd {
+    width: 50%;
+    text-align: center;
+    text-transform: uppercase;
+    border: 1px solid #73AE2C;
+    border-width: 0 0 1px 0;
+    a {
+      background: #fff;
+      color: #bbb;
+      &:hover, &:focus {
+        background: #fff;
+        color: #73AE2C;
+      }
+
+    }
+
+    &.active {
+      border-width: 1px 1px 0 1px;
+      font-weight: bold;
+      > a {
+        background: #73AE2C;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.tabs-content {
+  .content {
+    padding: 0;
+  }
+}
+
 ul.timetable {
   list-style: none;
   margin: 0;
@@ -22,15 +56,17 @@ ul.timetable {
     display: block;
     text-align: center;
     line-height: 2em;
-    &:nth-child(odd) {
-      background: #f2f2f2;
-    }
 
     &.past {
       display: none;
     }
 
     &:not(.past) {
+      &:nth-of-type(odd) {
+        background: #73AE2C;
+        color: #fff;
+      }
+
       &:first-of-type {
         font-size: 2em;
         font-weight: bold;
