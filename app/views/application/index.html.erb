@@ -1,5 +1,7 @@
 <% hnow = Hour.now %>
 
+<h2>Aktualna godzina: <%= hnow %></h2>
+
 <dl data-tab class="tabs">
   <% @timetables[2..3].each_with_index do |tt, idx| %>
   <dd class="<%= 'active' if idx.zero? %>"><%= link_to tt.name, "#tab-#{idx}" %></dd>
@@ -9,6 +11,8 @@
         <% tt.get.each do |hour| %>
           <% if hour > hnow %>
             <li><%= hour %></li>
+          <% else %>
+            <li class="past"><%= hour %></li>
           <% end %>
         <% end %>
         </ul>

@@ -13,5 +13,7 @@ ul.timetable {
       background: #f2f2f2;
     }
 
+    &.past {display: none;}
+
   }
 }
