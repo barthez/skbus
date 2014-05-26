@@ -4,6 +4,12 @@
   font-family: 'Fredoka One';
   text-align: center;
   font-size: 4em;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10;
+  margin: 0;
 
   em { font-style: normal; }
 
@@ -14,6 +20,7 @@
 }
 
 .tabs {
+  margin-top: 5em;
   dd {
     width: 50%;
     text-align: center;
@@ -56,30 +63,45 @@ ul.timetable {
     display: block;
     text-align: center;
     line-height: 2em;
+    color: #73AE2C;
+    background: #FFF;
+    &:nth-child(even) {
+      color: #fff;
+      background: #73AE2C;
+    }
 
     &.past {
       display: none;
     }
 
-    &:not(.past) {
-      &:nth-of-type(odd) {
-        background: #73AE2C;
-        color: #fff;
-      }
 
-      &:first-of-type {
+    &:not(.past) {
+
+      &.first-1 {
         font-size: 2em;
         font-weight: bold;
       }
 
-      &:nth-of-type(2) {
+      &.first-2 {
         font-size: 1.7em;
       }
 
-      &:nth-of-type(3) {
+      &.first-3 {
         font-size: 1.2em;
       }
     }
 
+  }
+
+  &.even-past {
+    li {
+      color: #fff;
+      background: #73AE2C;
+
+      &:nth-child(even) {
+        color: #73AE2C;
+        background: #FFF;
+      }
+    }
   }
 }

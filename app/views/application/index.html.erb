@@ -8,9 +8,10 @@
     <% content_for(:tabs) do %>
       <div class="content <%= 'active' if idx.zero? %>" id="tab-<%= idx %>">
         <ul class="timetable">
+        <% idx = 0 %>
         <% tt.get.each do |hour| %>
           <% if hour > hnow %>
-            <li><%= hour %></li>
+            <li class="<%= "first-#{idx += 1}" if idx < 3 %>"><%= hour %></li>
           <% else %>
             <li class="past"><%= hour %></li>
           <% end %>

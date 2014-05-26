@@ -31,7 +31,7 @@ class Hour
   end
 
   def self.now
-    parse Time.now.strftime('%H:%M')
+    parse Time.zone.now.strftime('%H:%M')
   end
 end
 
