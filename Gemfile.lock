@@ -73,6 +73,7 @@ GEM
       hashery (~> 2.0)
       ruby-rc4
       ttfunk
+    pg (0.18.1)
     polyglot (0.3.4)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
@@ -150,6 +151,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   pdf-reader
+  pg
   quiet_assets
   rack-mini-profiler
   rails (= 4.1.1)
