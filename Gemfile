@@ -5,7 +5,8 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.1'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3', group: :development
-gem 'pg'
+# gem 'pg'
+gem 'redis'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
 # Use Uglifier as compressor for JavaScript assets
@@ -40,7 +41,15 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 gem 'pdf-reader'
+gem 'rack-mini-profiler'
 
 gem 'rails_12factor', group: :production
 
 gem 'foundation-rails'
+
+
+group :development do 
+	gem 'better_errors'
+	gem "binding_of_caller"
+	gem 'quiet_assets'
+end
