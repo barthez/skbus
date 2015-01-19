@@ -4,8 +4,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def index
-    @timetables = SkBusParser.parse_all
+    @timetables = SkBusParser.all
 
     respond_to :html
+  end
+
+  def polymer
+    @factory = TimetableFactory.new
+    @selected = @factory.by_id(params[:timetable]) || @factory.first
+
+  	render layout: false
   end
 end

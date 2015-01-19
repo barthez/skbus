@@ -6,13 +6,13 @@
 
     <title><%= content_for?(:title) ? yield(:title) : "SK-BUS" %></title>
 
-    <%= stylesheet_link_tag    "application" %>
+    <%= stylesheet_link_tag    "fapplication" %>
     <%= javascript_include_tag "vendor/modernizr" %>
+    <%#= html_import_tag "application", "data-turbolinks-track" => true %>
     <%= csrf_meta_tags %>
   </head>
 
   <body>
-
     <%= yield %>
     <%= javascript_include_tag "application" %>
   </body>

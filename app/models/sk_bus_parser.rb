@@ -10,11 +10,15 @@ class SkBusParser < Timetable
     parse! unless ready?
   end
 
+  def self.by_id(id)
+    all.find{|t| t.redis_key.split(':', 2).last == id }
+  end
+
   def self.parse(path)
       self.new(path: path)
   end
 
-  def self.parse_all
+  def self.all
     @@timetables ||= urls.map do |path|
       self.parse(path)
     end
@@ -28,11 +32,15 @@ class SkBusParser < Timetable
     else
       _urls = JSON.parse(_urls)
     end
-    _urls
+    _urls.reverse
   end
 
   def self.redis_key_part
     name.sub('Parser', '').underscore
+  end
+
+  def self.make_key(url)
+    url.sub(%r{[/-]}, '_').sub('.pdf', '')
   end
 
   private
@@ -40,7 +48,7 @@ class SkBusParser < Timetable
   def parse_options!
     raise "Missing :path in options" unless options[:path]
     @path = options[:path]
-    key_part = @path.sub(%r{[/-]}, '_').sub('.pdf', '')
+    key_part = self.class.make_key(@path)
     @redis_key = "#{self.class.redis_key_part}:#{key_part}"
     _timetable_json = Scheduler.redis.get("#{@redis_key}:timetable")
     if _timetable_json

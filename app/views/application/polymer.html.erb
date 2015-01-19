@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= content_for?(:title) ? yield(:title) : "SK-BUS" %></title>
+
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "webcomponentsjs/webcomponents" %>
+    <%#= javascript_include_tag "vendor/modernizr" %>
+    <%= html_import_tag "application", "data-turbolinks-track" => true %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body fullbleed layout vertical>
+  	<core-drawer-panel>
+	  	<core-header-panel drawer>
+		    <core-toolbar></core-toolbar>
+		    <div>
+		    	<core-menu>
+		    	<% @factory.each do |timetable| %>
+		    		<core-item icon="swap-horiz" label="<%= timetable.name %>">
+		    			<%= link_to '', url_for(timetable: timetable.redis_key) %>
+		    		</core-item icon="swap-horiz">
+		    	<% end %>
+		    	</core-menu>
+		    </div>
+	  	</core-header-panel>
+	  	<core-header-panel main flex>
+		    <core-toolbar>
+  		    <core-icon-button icon="menu" core-drawer-toggle></core-icon-button>
+		      <div flex><%= @selected.name %></div>
+		    </core-toolbar>
+		    <div>
+					  <% @selected.get.each do |hour| %>
+					  	<core-item>
+					  		<div flex><%= hour %></div>
+					  	</core-item>
+					  <% end %>
+					 </ul>
+
+		    </div>
+		  </core-header-panel>
+  	</core-drawer-panel>
+  </body>
+</html>
+

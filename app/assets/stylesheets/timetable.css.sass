@@ -1,0 +1,83 @@
+// @import 'overrides'
+
+.current-time
+  font-family: 'Fredoka One'
+  text-align: center
+  font-size: 4em
+  position: fixed
+  top: 0
+  width: 100%
+  background: #fff
+  z-index: 10
+  margin: 0
+
+  em 
+    font-style: normal
+
+  .colon em
+    color: transparent
+
+.tabs
+  margin-top: 5em
+  dd
+    width: 50%
+    text-align: center
+    text-transform: uppercase
+    border: 1px solid #73AE2C
+    border-width: 0 0 1px 0
+    a
+      background: #fff
+      color: #bbb
+      &:hover, &:focus
+        background: #fff
+        color: #73AE2C
+
+    &.active
+      border-width: 1px 1px 0 1px
+      font-weight: bold
+      > a
+        background: #73AE2C
+        color: #fff
+
+.tabs-content
+  .content
+    padding: 0
+
+ul.timetable
+  list-style: none
+  margin: 0
+  padding: 0
+
+  li
+    display: block
+    text-align: center
+    line-height: 2em
+    color: #73AE2C
+    background: #FFF
+    &:nth-child(even)
+      color: #fff
+      background: #73AE2C
+
+    &.past
+      display: none
+
+    &:not(.past)
+
+      &.first-1
+        font-size: 2em
+        font-weight: bold
+
+      &.first-2
+        font-size: 1.7em
+
+      &.first-3
+        font-size: 1.2em
+
+  &.even-past
+    li
+      color: #fff
+      background: #73AE2C
+
+      &:nth-child(even)
+        color: #73AE2C
+        background: #FFF

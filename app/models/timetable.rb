@@ -1,7 +1,7 @@
 class Timetable
   @@types = [:week, :sat, :sun, :hol].freeze
 
-  attr_reader :name, :options
+  attr_reader :name, :options, :redis_key
 
   def initialize(options = {})
     @name = options[:name]

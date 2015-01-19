@@ -47,7 +47,7 @@ gem 'rack-mini-profiler'
 gem 'rails_12factor', group: :production
 
 gem 'foundation-rails'
-
+gem 'emcee'
 
 group :development do 
 	gem 'better_errors'
