@@ -21,7 +21,7 @@
 		    	<core-menu>
 		    	<% @factory.each do |timetable| %>
 		    		<core-item icon="swap-horiz" label="<%= timetable.name %>">
-              <%= link_to '', url_for(timetable: timetable.redis_key) %>
+              <%= link_to '', url_for(timetable: timetable.global_id) %>
             </core-item icon="swap-horiz">
           <% end %>
           </core-menu>
@@ -34,9 +34,9 @@
             <%= @selected.name %></h1>
           </div>
           <nav>
-            <%= link_to 'today', url_for(timetable: @selected.redis_key) %>
+            <%= link_to 'today', url_for(timetable: @selected.global_id) %>
             <% Timetable::TYPES.each do |t| %>
-              <%= link_to t, url_for(timetable: @selected.redis_key, type: t) %>
+              <%= link_to t, url_for(timetable: @selected.global_id, type: t) %>
             <% end %>
           </nav>
 		    </core-toolbar>

@@ -10,7 +10,7 @@ class TimetableFactory
 
 	def by_id(id)
 		return unless id
-		klass_id, tid = id.split(':')
+		klass_id, tid = id.split('-', 2)
 		parser_class(klass_id).by_id(tid)
 	end
 
@@ -20,8 +20,8 @@ class TimetableFactory
 		end
 	end
 
-
 	private
+
 	def parser_class(id)
 		"#{id.camelize}Parser".constantize
 	end

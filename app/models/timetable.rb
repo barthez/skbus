@@ -1,12 +1,11 @@
 class Timetable
   TYPES = @@types = [:week, :sat, :sun, :hol].freeze
 
-  attr_reader :name, :options, :redis_key
+  attr_reader :name, :options, :redis_key, :timetable
 
   def initialize(options = {})
     @name = options[:name]
     @options = options
-    @timetable = Hash.new {|hash, key| hash[key] = [] }
   end
 
   def self.types
@@ -18,8 +17,11 @@ class Timetable
   end
 
   def add(hour, type = types.first)
-    idx = @timetable[type].index {|item| item > hour } || -1
-    @timetable[type].insert(idx, hour)
+    @timetable[type].push(hour)
+  end
+
+  def global_id
+    [self.class.name.sub(/Parser$/, '').underscore, id].compact.join('-')
   end
 
   def self.today_type
@@ -35,8 +37,7 @@ class Timetable
   end
 
   def get(type = nil)
-    pp(type)
     type ||= self.class.today_type
-    @timetable[type]
+    timetable[type]
   end
 end

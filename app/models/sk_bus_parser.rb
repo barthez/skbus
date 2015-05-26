@@ -2,40 +2,36 @@ require "open-uri"
 require "pdf-reader"
 
 class SkBusParser < Timetable
-  @@url = "http://www.skbus.com.pl"
+  extend RedisCache
+  URL = "http://www.skbus.com.pl"
 
   def initialize(options = {})
     super
-    parse_options!
-    parse! unless ready?
+    @url = options[:url]
+    @redis_key = "#{self.class.redis_key}:#{name.downcase.gsub(/\W+/, '_')}"
   end
 
   def self.by_id(id)
-    all.find{|t| t.redis_key.split(':', 2).last == id }
-  end
-
-  def self.parse(path)
-      self.new(path: path)
+    all.find{|t| t.id == id }
   end
 
   def self.all
-    @@timetables ||= urls.map do |path|
-      self.parse(path)
+    urls.map do |name, url|
+      self.new(name: name, url: url)
     end
   end
 
   def self.urls
-    _urls = Scheduler.redis.get("#{redis_key_part}:_urls")
-    if _urls.nil?
-      _urls = open("#{@@url}/rozklady.html").read.scan(/href="(.*pdf)"/).map(&:first).first(4)
-      Scheduler.redis.set("#{redis_key_part}:_urls", _urls.to_json)
-    else
-      _urls = JSON.parse(_urls)
+    html = Nokogiri::HTML(open("#{URL}/rozklady.html").read)
+    html.css('a[href$=pdf]').take(4).map do |a|
+      link = a['href']
+      info = a.ancestors('p').first.at_css('b').text
+      [info.each_line.to_a[1].strip, URI.join(URL, link).to_s]
     end
-    _urls.reverse
   end
+  class_redis_cache :urls
 
-  def self.redis_key_part
+  def self.redis_key
     name.sub('Parser', '').underscore
   end
 
@@ -43,31 +39,19 @@ class SkBusParser < Timetable
     url.sub(%r{[/-]}, '_').sub('.pdf', '')
   end
 
+  def id
+    name.downcase.gsub(/\s+/, '-')
+  end
+
   private
 
   def parse_options!
-    raise "Missing :path in options" unless options[:path]
-    @path = options[:path]
-    key_part = self.class.make_key(@path)
-    @redis_key = "#{self.class.redis_key_part}:#{key_part}"
-    _timetable_json = Scheduler.redis.get("#{@redis_key}:timetable")
-    if _timetable_json
-      @timetable = JSON.parse(_timetable_json).symbolize_keys
-      @timetable.each_value do |table|
-        table.map!{|h| Hour.new(h["hour"], h["minute"], h["type"].presence) }
-      end
-      @timetable.default_proc = proc {|hash, key| hash[key] = [] }
-      @name = Scheduler.redis.get("#{@redis_key}:name")
-      @ready = true
-    end
-
   end
 
-  def parse!
-    text = PDF::Reader.new( open("#{@@url}/#{@path}") ).page(1).text
-    Rails.logger.debug text
-    from, direction = text.match(/odjazdy z (\w+) .*do (\w+)/i).captures
-    @name = "Z #{from.capitalize} do #{direction.capitalize}"
+  def timetable
+    @timetable = Timetable::TYPES.map { |type| [type, []] }.to_h
+
+    text = PDF::Reader.new( open(@url) ).page(1).text
 
     idx = 0
     last = nil
@@ -84,14 +68,9 @@ class SkBusParser < Timetable
       last = h
     end
 
-    redis_set!
+    @timetable.each_value(&:sort!)
   end
-
-  def redis_set!
-    Scheduler.redis.set("#{@redis_key}:name", @name)
-    Scheduler.redis.set("#{@redis_key}:timetable", @timetable.to_json)
-  end
-
+  redis_cache :timetable
 end
 
 

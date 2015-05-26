@@ -2,8 +2,12 @@ require 'net/http'
 require 'pp'
 
 class MatBusParser < Timetable
+  extend RedisCache
   @@url = "http://matbus.pl"
 
+  attr_reader :id
+
+  URL_KEY = %r{(?<=d/).*(?=/pubhtml)}
   DAYS_MAP = {
     /PON/ => :week,
     /SB|SOBOTA/ => :sat,
@@ -13,7 +17,7 @@ class MatBusParser < Timetable
 
   def self.urls
     html = Nokogiri::HTML open("#{@@url}/przewozy_regularne").read
-    @urls ||= html.css('#gpx_content a').map do |link|
+    html.css('#gpx_content a').map do |link|
       description = link.text
       info =  description.slice!(/\(.*\)/)
       connection = description.strip.split(/\s*-\s*/)
@@ -22,6 +26,11 @@ class MatBusParser < Timetable
         [route, info, url]
       end if url
     end.compact.flatten(1)
+  end
+  class_redis_cache :urls
+
+  def self.redis_key
+    "mat_bus"
   end
 
   def self.each_route(connection)
@@ -40,8 +49,7 @@ class MatBusParser < Timetable
   end
 
   def self.by_id(id)
-    route, info, url = urls.detect { |route, _, _| route.join('-').downcase == id }
-    new(route: route, info: info, url: url)
+    all.detect { |t| t.id == id }
   end
 
   def initialize(options = {})
@@ -49,17 +57,19 @@ class MatBusParser < Timetable
     @info = options[:info]
     @url = options[:url].sub(/(?<=pubhtml).*$/, '')
     super(name: @route.join(' - '))
-    @redis_key = "mat_bus:#{@route.join('-').downcase}"
+    @id = @route.join('-').downcase
+    @redis_key = "#{self.class.redis_key}:#{@url[URL_KEY]}"
   end
 
-  def parse!
-    @url
+  def timetable
+    @timetable = Timetable::TYPES.map { |type| [type, []] }.to_h
+
     html = Nokogiri::HTML(open(@url).read)
     rows = html.css('tr').reject { |row| row.text.empty? || row.at_css('td')['colspan']  }
-    timetable = rows.map { |row| row.css('td').map(&:text) }.transpose
-    timetable = timetable.first(timetable.size/2)
-    hours = timetable.shift.map(&:to_i)
-    timetable.each do |day|
+    timetables = rows.map { |row| row.css('td').map(&:text) }.transpose
+    timetables = timetables.first(timetables.size/2)
+    hours = timetables.shift.map(&:to_i)
+    timetables.each do |day|
       types = nil
       day.each_with_index do |minute, idx|
         if idx == 0
@@ -74,12 +84,9 @@ class MatBusParser < Timetable
         end
       end
     end
+    @timetable.each_value(&:sort!)
   end
-
-  def get(*)
-    parse! if @timetable.empty?
-    super
-  end
+  redis_cache :timetable
 
   private
 
