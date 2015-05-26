@@ -1,5 +1,5 @@
 class TimetableFactory
-	REGISTERED_PARSERS = %w(sk_bus)
+	REGISTERED_PARSERS = %w(sk_bus mat_bus)
 	delegate :each, :to => :all
 
 	include Enumerable

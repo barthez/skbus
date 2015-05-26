@@ -1,5 +1,5 @@
 class Timetable
-  @@types = [:week, :sat, :sun, :hol].freeze
+  TYPES = @@types = [:week, :sat, :sun, :hol].freeze
 
   attr_reader :name, :options, :redis_key
 
@@ -11,6 +11,10 @@ class Timetable
 
   def self.types
     @@types
+  end
+
+  def self.all
+    []
   end
 
   def add(hour, type = types.first)
@@ -31,6 +35,7 @@ class Timetable
   end
 
   def get(type = nil)
+    pp(type)
     type ||= self.class.today_type
     @timetable[type]
   end

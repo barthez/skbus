@@ -160,6 +160,7 @@ DEPENDENCIES
   foundation-rails
   jbuilder (~> 2.0)
   jquery-rails
+  nokogiri
   pdf-reader
   pg
   quiet_assets

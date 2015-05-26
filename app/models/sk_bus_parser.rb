@@ -65,6 +65,7 @@ class SkBusParser < Timetable
 
   def parse!
     text = PDF::Reader.new( open("#{@@url}/#{@path}") ).page(1).text
+    Rails.logger.debug text
     from, direction = text.match(/odjazdy z (\w+) .*do (\w+)/i).captures
     @name = "Z #{from.capitalize} do #{direction.capitalize}"
 

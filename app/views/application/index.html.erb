@@ -3,7 +3,7 @@
 <h2 class="current-time"><span><%= hnow %></span></h2>
 
 <dl data-tab class="tabs">
-  <% @timetables[2..3].each_with_index do |tt, idx| %>
+  <% @timetables[0..1].each_with_index do |tt, idx| %>
   <dd class="<%= 'active' if idx.zero? %>"><%= link_to tt.name.gsub(/do.*$/, ''), "#tab-#{idx}" %></dd>
     <% content_for(:tabs) do %>
       <div class="content <%= 'active' if idx.zero? %>" id="tab-<%= idx %>">

@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
   def polymer
     @factory = TimetableFactory.new
     @selected = @factory.by_id(params[:timetable]) || @factory.first
+    @type = Timetable::TYPES.find{ |t| t.to_s == params[:type] }
 
   	render layout: false
   end

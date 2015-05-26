@@ -49,7 +49,9 @@ gem 'rails_12factor', group: :production
 gem 'foundation-rails'
 gem 'emcee'
 
-group :development do 
+gem 'nokogiri'
+
+group :development do
 	gem 'better_errors'
 	gem "binding_of_caller"
 	gem 'quiet_assets'
